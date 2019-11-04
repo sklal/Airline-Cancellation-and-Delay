@@ -1,17 +1,9 @@
 # Libraries Used
 import pandas as pd
 import numpy as np
-from scipy.stats import mode
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import Ridge
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import cross_validate
-from sklearn.model_selection import cross_val_score
-from sklearn import metrics
 import matplotlib.pyplot as plt
 import seaborn as sns
+import datetime
 
 # Loading the test and train data
 
@@ -101,24 +93,24 @@ airline['Airline Carrier'].unique()
 # Renaming the Carriers
 
 airline['Airline Carrier'].replace({
-    'UA': 'United Airlines',
-    'AS': 'Alaska Airlines',
+    'UA': 'United airline',
+    'AS': 'Alaska airline',
     '9E': 'Endeavor Air',
     'B6': 'JetBlue Airways',
     'EV': 'ExpressJet',
-    'F9': 'Frontier Airlines',
+    'F9': 'Frontier airline',
     'G4': 'Allegiant Air',
-    'HA': 'Hawaiian Airlines',
+    'HA': 'Hawaiian airline',
     'MQ': 'Envoy Air',
-    'NK': 'Spirit Airlines',
-    'OH': 'PSA Airlines',
-    'OO': 'SkyWest Airlines',
+    'NK': 'Spirit airline',
+    'OH': 'PSA airline',
+    'OO': 'SkyWest airline',
     'VX': 'Virgin America',
-    'WN': 'Southwest Airlines',
+    'WN': 'Southwest airline',
     'YV': 'Mesa Airline',
     'YX': 'Republic Airways',
-    'AA': 'American Airlines',
-    'DL': 'Delta Airlines'
+    'AA': 'American airline',
+    'DL': 'Delta airline'
 }, inplace=True)
 
 airline['Airline Carrier'].unique()
@@ -135,3 +127,31 @@ pd.to_datetime(airline['Date Of Flight'])
 airline['Month'] = pd.to_datetime(airline['Date Of Flight']).dt.month
 # Extracting Day variable from the dataset
 airline['Day'] = pd.to_datetime(airline['Date Of Flight']).dt.weekday_name
+
+# Formatting Time
+
+
+def conv_time(time_val):
+    if pd.isnull(time_val):
+        return np.nan
+    else:
+            # replace 24:00 o'clock with 00:00 o'clock:
+        if time_val == 2400:
+            time_val = 0
+            # creating a 4 digit value out of input value:
+        time_val = "{0:04d}".format(int(time_val))
+        # creating a time datatype out of input value:
+        time_formatted = datetime.time(int(time_val[0:2]), int(time_val[2:4]))
+    return time_formatted
+
+
+airline['Actual Arrival Time'] = airline['Actual Arrival Time'].apply(
+    conv_time)
+airline['Actual Departure Time'] = airline['Actual Departure Time'].apply(
+    conv_time)
+airline['Planned Departure Time'] = airline['Planned Departure Time'].apply(
+    conv_time)
+airline['Wheels On'] = airline['Wheels On'].apply(conv_time)
+airline['Wheels Off'] = airline['Wheels Off'].apply(conv_time)
+airline['Planned Arrival Time'] = airline['Planned Arrival Time'].apply(
+    conv_time)
