@@ -155,3 +155,16 @@ airline['Wheels On'] = airline['Wheels On'].apply(conv_time)
 airline['Wheels Off'] = airline['Wheels Off'].apply(conv_time)
 airline['Planned Arrival Time'] = airline['Planned Arrival Time'].apply(
     conv_time)
+
+# Cancellation Code Mapping
+# A - Airline/Carrier - 1
+# B - Weather - 2
+# C - National Air System - 3
+# D - Security - 4
+# Not Applicable - 0
+
+airline.loc[airline['Cancellation Code'] == 'A', 'Cancellation Code'] = 1
+airline.loc[airline['Cancellation Code'] == 'B', 'Cancellation Code'] = 2
+airline.loc[airline['Cancellation Code'] == 'C', 'Cancellation Code'] = 3
+airline.loc[airline['Cancellation Code'] == 'D', 'Cancellation Code'] = 4
+airline['Cancellation Code'] = airline['Cancellation Code'].fillna(0)
